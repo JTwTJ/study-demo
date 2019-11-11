@@ -1,14 +1,16 @@
 package com.jwt.study.demo.rest;
 
-import generator.Student;
+import com.jwt.study.demo.data.bo.StudentBO;
+import com.jwt.study.demo.data.po.Student;
+import com.jwt.study.demo.service.StudentService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.validation.Valid;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -21,17 +23,30 @@ import javax.ws.rs.core.MediaType;
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/test/")
 @Slf4j
+@Validated
 public class TestResource {
+
+    @Autowired
+    private StudentService studentService;
 
     @Path("index")
     @GET
     public String index() {
+
         log.info("hello world demo run");
         return "hello world!";
     }
 
-    public static void main(String[] args) {
-        Student student = new Student();
-        Long id = student.getId();
+    /**
+     * 新建学生信息
+     * @param studentBO 学生信息
+     * @return 创建结果
+     */
+    @Path("create")
+    @POST
+    public Boolean createStudent(@Valid StudentBO studentBO) {
+
+        log.info("create student param StudentBO:{}", studentBO);
+        return studentService.createStudent(studentBO);
     }
 }
